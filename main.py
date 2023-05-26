@@ -66,9 +66,14 @@ def main():
     submit_btn = driver.find_element(By.NAME, "ctl00$ContentPlaceHolderMP$myButton")
     submit_btn.click()
 
-    WebDriverWait(driver, 3).until(
-        EC.invisibility_of_element_located((By.ID, "greyCover"))
-    )
+    try:
+        WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.CLASS_NAME, 'h-CloseButton'))
+        ).click()
+    except Exception:
+        pass
+
+    WebDriverWait(driver, 3).until(EC.invisibility_of_element_located((By.ID, "greyCover")))
 
     try:
         btn_pop_up = driver.find_element(By.CLASS_NAME, "modal-dialog").find_element(
@@ -82,11 +87,6 @@ def main():
         By.XPATH, "//div[text()='Prendre rendez-vous dans une clinique à proximité']"
     )
     next_step_link.click()
-
-    # date_range = driver.find_element(By.ID, "DateRangeStart")
-    # date_range.clear()
-    # date_range.click()
-    # date_range.send_keys(person.date_range)
 
     consulting_reason = Select(driver.find_element(By.NAME, "consultingReason"))
     consulting_reason.select_by_value(person.reason)
@@ -128,7 +128,7 @@ def main():
                 By.ID, "clinicsWithNoDisponibilitiesContainer"
             )
 
-    WebDriverWait(driver, 30).until(
+    WebDriverWait(driver, 3).until(
         EC.visibility_of_element_located((By.ID, "ClinicList"))
     )
 
